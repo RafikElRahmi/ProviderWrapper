@@ -5,9 +5,10 @@ import React, {
   useContext,
   FC,
 } from "react";
+import { fetchDataType } from "./ProviderTree";
 
 export type DataProviderType = FC<{
-  fetchData: () => Promise<{ data: string }>;
+  fetchData: fetchDataType
   children: React.ReactNode;
 }>;
 

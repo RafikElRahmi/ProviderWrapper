@@ -1,17 +1,28 @@
 import createProvWrap from "./provWrap";
 import AuthProvider from "./prov1";
 import ThemeProvider from "./prov2";
-import DataProvider, { DataProviderType } from "./prov3";
-import { reactChildren } from "./provWrap";
+import DataProvider from "./prov3";
 
-export type ProviderType = reactChildren | DataProviderType;
-export type ProviderPropsType = null;
+export type fetchDataType = () => Promise<{ data: string }>;
 
-export type ProviderTreeType =  [ProviderType, ProviderPropsType?]
+
+
+const fetchData: fetchDataType = async () => {
+  const storedData = localStorage.getItem("data");
+
+  if (storedData) {
+    return { data: storedData };
+  } else {
+    const response = await fetch("/api/data");
+    const fetchedData = await response.json();
+    localStorage.setItem("data", fetchedData.data);
+    return { data: fetchedData.data };
+  }
+};
 
 const ProviderTree = createProvWrap([
   [AuthProvider],
-  [DataProvider],
+  [DataProvider, { fetchData }],
   [ThemeProvider],
 ]);
 
